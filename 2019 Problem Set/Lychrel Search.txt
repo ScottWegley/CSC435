@@ -1,0 +1,72 @@
+Process Input ======
+Read numbers.txt
+Convert to string, split by \n characters
+For each (result of previous) split by white space, store in "lines array"
+Simulate Lychrel Search ======
+Array of Results = Length of Lines Array
+for each in "lines"
+
+
+
+
+
+
+lychrelStep(radix, input){ // 3, 196
+for line {
+    int counter = 0;
+    do {
+        counter++
+        number = new number(input, base);
+        input = input + number.toBase10();
+        number = new number(input, base);
+    }
+    while (!number.isPalindrome() && counter <= 500;);
+    results[i] = (counter > 500 ? ">500\n" : counter.toString() + " " + number.digits.length + "\n");
+}
+}
+
+class Number {
+    digits[];
+    int lastValue;
+
+    number(input, base){
+        boolean first = true;
+        while(input > 0){
+        maxSubtraction = 1;
+        count = 0;
+        while(maxSubtraction < input){
+            maxSubtraction *= base;
+            count++;
+        }
+        if(first) digits = new int[count]; first = false; lastValue = count - 1;
+        maxSubtraction /= base;
+        while(maxSubtraction < input){
+            input -= maxSubtraction;
+            digits[count-1]++;
+        }
+        }
+    }
+
+    toBase10(){
+        int out = 0;
+        for each in digits <= lastValue {
+            out += digits[i] * Math.pow(base, i);
+        }
+        return out;
+    }
+
+    isPalindrome(){
+        int tail = 0; int head = lastValue;
+        for i = 0; i < lastValue / 2 {
+            if(digits[tail++] != digits[head--]){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+Print Results =====
+
+110111100000101101101011001110100111011000111111111111111111
