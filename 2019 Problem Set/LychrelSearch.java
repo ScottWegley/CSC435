@@ -1,4 +1,5 @@
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,14 +22,15 @@ public class LychrelSearch {
 
         for (int i = 0; i < lines.size(); i++) {
             int base = Integer.parseInt(lines.get(i).substring(0, lines.get(i).indexOf(" ")));
-            long input = Long.parseLong(lines.get(i).substring(lines.get(i).indexOf(" ") + 1));
-            Number number;
+            BigInteger input = new BigInteger(lines.get(i).substring(lines.get(i).indexOf(" ") + 1));
+            Number number = new Number(input, base);
             int counter = 0;
-            do {
+            System.out.println("=====" + input + "  " + base + "=====");
+            while (!number.isPalindrome() && !(counter > 500)) {
                 counter++;
+                input = input.add(number.toBase10Reversed());
                 number = new Number(input, base);
-                input = input + number.toBase10();
-            } while (!number.isPalindrome() && counter <= 500);
+            }
             results[i] = (counter > 500 ? ">500\n"
                     : Integer.toString(counter) + " " +
                             number.digits.length + "\n");
@@ -43,35 +45,37 @@ class Number {
     int lastValue;
     private int base;
 
-    Number(long input, int base) {
+    Number(BigInteger input, int _base) {
         boolean first = true;
-        while (input != 0) {
-            long maxSubtraction = 1;
+        base = _base;
+        while (input != BigInteger.ZERO) {
+            BigInteger maxSubtraction = BigInteger.ONE;
             int count = 0;
-            while (maxSubtraction < input && maxSubtraction * base > 0) {
-                maxSubtraction *= base;
+            while (maxSubtraction.compareTo(input) == -1) {
+                maxSubtraction = maxSubtraction.multiply(new BigInteger(String.valueOf(base)));
                 count++;
             }
             if (first) {
                 first = false;
-                digits = new int[count + 1];
-                lastValue = count;
+                digits = new int[count];
+                lastValue = count - 1;
             }
-            if (maxSubtraction > input) {
-                maxSubtraction /= base;
+            if (maxSubtraction.compareTo(input) == 1) {
+                maxSubtraction = maxSubtraction.divide(new BigInteger(String.valueOf(base)));
                 count--;
             }
-            while (maxSubtraction <= input) {
-                input -= maxSubtraction;
+            while (maxSubtraction.compareTo(input) == -1 || maxSubtraction.compareTo(input) == 0) {
+                input = input.subtract(maxSubtraction);
                 digits[count]++;
             }
         }
     }
 
-    long toBase10() {
-        long out = 0;
-        for (int i = 0; i < digits.length; i++) {
-            out += digits[i] * Math.pow(base, i);
+    BigInteger toBase10Reversed() {
+        BigInteger out = BigInteger.ZERO;
+        for (int i = 0; i <= lastValue; i++) {
+            out = out.add((new BigInteger(String.valueOf(digits[i]))
+                    .multiply(new BigInteger(String.valueOf((int) Math.pow(base, i))))));
         }
         return out;
     }
@@ -79,7 +83,7 @@ class Number {
     boolean isPalindrome() {
         int tail = 0;
         int head = lastValue;
-        for (int i = 0; i < lastValue / 2 && tail <= head; i++) {
+        for (int i = 0; tail <= head; i++) {
             if (digits[tail++] != digits[head--]) {
                 return false;
             }
