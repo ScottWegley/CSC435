@@ -1,4 +1,4 @@
-import java.io.File;import java.math.long;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -78,14 +78,13 @@ public class LychrelSearch {
         long maxSub = 1;
         int lastValue = -1;
         boolean first = true;
-        while (input.compareTo(long.ZERO) != 0) {
-            while ((maxSub.compareTo(input) == -1)
-                    && maxSub.multiply(new long(String.valueOf(base))).compareTo(long.ZERO) == 1) {
-                maxSub = maxSub.multiply(new long(String.valueOf(base)));
+        while (input != 0) {
+            while (maxSub < input && maxSub * base > 0) {
+                maxSub *= base;
                 count++;
             }
-            if (maxSub.compareTo(input) == 1) {
-                maxSub = maxSub.divide(new long(String.valueOf(base)));
+            if (maxSub > input) {
+                maxSub /= base;
                 count--;
             }
             if (first) {
@@ -93,8 +92,8 @@ public class LychrelSearch {
                 digits = new short[count];
                 lastValue = count - 1;
             }
-            while (maxSub.compareTo(input) == 0 || maxSub.compareTo(input) == -1) {
-                input = input.subtract(maxSub);
+            while (maxSub <= input) {
+                input -= maxSub;
                 digits[lastValue - (count - 1)]++;
             }
         }
