@@ -17,7 +17,16 @@ public class LychrelSearch {
         while (scan.hasNextLine()) {
             lines.add(scan.nextLine());
         }
-        String results[] = new String[lines.size()];
+
+    public static long reverse(long input) {
+        long out = 0;
+        while (input != 0) {
+            out *= 10;
+            out += input % 10;
+            input /= 10;
+        }
+        return out;
+    }
 
     }
 
