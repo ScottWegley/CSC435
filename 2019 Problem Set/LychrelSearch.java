@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class LychrelSearch {
     public static void main(String[] args) {
-
         File file = new File("C:\\Code\\CSC435\\2019 Problem Set\\LychrelNumbers.txt");
         Scanner scan = null;
         try {
