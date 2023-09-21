@@ -31,6 +31,9 @@ public class LychrelSearch {
         return out;
     }
 
+    public static int length(long input, short base) {
+        return 0;
+    }
     }
 
 }
