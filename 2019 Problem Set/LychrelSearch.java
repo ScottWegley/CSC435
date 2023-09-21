@@ -17,6 +17,16 @@ public class LychrelSearch {
         while (scan.hasNextLine()) {
             lines.add(scan.nextLine());
         }
+    }
+
+    public static String lychrelSearch(short base, long input) {
+        int counter = 0;
+        while (counter <= 500 && !isPalindrome(base, input)) {
+            input += reverse(input);
+            counter++;
+        }
+        return (counter > 500 ? ">500\n" : (counter + " " + length(input, base) + "\n"));
+    }
     public static boolean isPalindrome(short base, long input) {
         return false;
     }
