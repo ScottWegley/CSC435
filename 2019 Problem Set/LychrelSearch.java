@@ -17,6 +17,9 @@ public class LychrelSearch {
         while (scan.hasNextLine()) {
             lines.add(scan.nextLine());
         }
+    public static boolean isPalindrome(short base, long input) {
+        return false;
+    }
 
     public static long reverse(long input) {
         long out = 0;
