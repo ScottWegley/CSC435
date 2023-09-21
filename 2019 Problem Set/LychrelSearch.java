@@ -30,19 +30,12 @@ public class LychrelSearch {
     public static String lychrelSearch(short base, long input) {
         int counter = 0;
         while (counter <= 500 && !isPalindrome(base, input)) {
-            // System.out.println((counter + 1) + ": " + input + " + " + reverse(input) + "
-            // = "
-            // + (input.add(reverse(input))) + " || " +
-            // digitsToString(getBaseDigits(input.add(reverse(input)), base)));
+            System.out.println((counter + 1) + ": " + input + " + " + reverse(input) + " = "
+                    + (input + reverse(input)) + " || " +
+                    digitsToString(getBaseDigits((input + reverse(input)), base)));
             input += reverse(input);
             counter++;
         }
-        // short[] digits = getBaseDigits(input, base);
-        // String out = "";
-        // for (short s : digits) {
-        // out = out + " " + s;
-        // }
-        // System.out.println(input + " in base " + base + " is || " + out);
         return (counter > 500 ? ">500\n" : (counter + " " + length(input, base) + "\n"));
     }
 
