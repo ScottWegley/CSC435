@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class LychrelSearch {
     public static void main(String[] args) {
-
         File file = new File("C:\\Code\\CSC435\\2019 Problem Set\\LychrelNumbers.txt");
         Scanner scan = null;
         try {
@@ -18,76 +17,96 @@ public class LychrelSearch {
         while (scan.hasNextLine()) {
             lines.add(scan.nextLine());
         }
-        String results[] = new String[lines.size()];
-
         for (int i = 0; i < lines.size(); i++) {
-            int base = Integer.parseInt(lines.get(i).substring(0, lines.get(i).indexOf(" ")));
-            BigInteger input = new BigInteger(lines.get(i).substring(lines.get(i).indexOf(" ") + 1));
-            Number number = new Number(input, base);
-            int counter = 0;
-            System.out.println("=====" + input + "  " + base + "=====");
-            while (!number.isPalindrome() && !(counter > 500)) {
-                counter++;
-                input = input.add(number.toBase10Reversed());
-                number = new Number(input, base);
-            }
-            results[i] = (counter > 500 ? ">500\n"
-                    : Integer.toString(counter) + " " +
-                            number.digits.length + "\n");
-            System.out.print(results[i]);
+            System.out.print("Trying " + lines.get(i).substring(lines.get(i).indexOf(" ") + 1) + " in base "
+                    + lines.get(i).substring(0,
+                            lines.get(i).indexOf(" "))
+                    + "  ||  " + lychrelSearch(Short.valueOf(lines.get(i).substring(0,
+                            lines.get(i).indexOf(" "))),
+                            new BigInteger(lines.get(i).substring(lines.get(i).indexOf(" ") + 1))));
         }
     }
 
-}
-
-class Number {
-    int digits[];
-    int lastValue;
-    private int base;
-
-    Number(BigInteger input, int _base) {
-        boolean first = true;
-        base = _base;
-        while (input != BigInteger.ZERO) {
-            BigInteger maxSubtraction = BigInteger.ONE;
-            int count = 0;
-            while (maxSubtraction.compareTo(input) == -1) {
-                maxSubtraction = maxSubtraction.multiply(new BigInteger(String.valueOf(base)));
-                count++;
-            }
-            if (first) {
-                first = false;
-                digits = new int[count];
-                lastValue = count - 1;
-            }
-            if (maxSubtraction.compareTo(input) == 1) {
-                maxSubtraction = maxSubtraction.divide(new BigInteger(String.valueOf(base)));
-                count--;
-            }
-            while (maxSubtraction.compareTo(input) == -1 || maxSubtraction.compareTo(input) == 0) {
-                input = input.subtract(maxSubtraction);
-                digits[count]++;
-            }
+    public static String lychrelSearch(short base, BigInteger input) {
+        int counter = 0;
+        while (counter <= 500 && !isPalindrome(base, input)) {
+            // System.out.println((counter + 1) + ": " + input + " + " + reverse(input) + "
+            // = "
+            // + (input.add(reverse(input))) + " || " +
+            // digitsToString(getBaseDigits(input.add(reverse(input)), base)));
+            input = input.add(reverse(input));
+            counter++;
         }
+        // short[] digits = getBaseDigits(input, base);
+        // String out = "";
+        // for (short s : digits) {
+        // out = out + " " + s;
+        // }
+        // System.out.println(input + " in base " + base + " is || " + out);
+        return (counter > 500 ? ">500\n" : (counter + " " + length(input, base) + "\n"));
     }
 
-    BigInteger toBase10Reversed() {
-        BigInteger out = BigInteger.ZERO;
-        for (int i = 0; i <= lastValue; i++) {
-            out = out.add((new BigInteger(String.valueOf(digits[i]))
-                    .multiply(new BigInteger(String.valueOf((int) Math.pow(base, i))))));
-        }
-        return out;
-    }
-
-    boolean isPalindrome() {
+    public static boolean isPalindrome(short base, BigInteger input) {
+        short[] digits = getBaseDigits(input, base);
         int tail = 0;
-        int head = lastValue;
-        for (int i = 0; tail <= head; i++) {
+        int head = digits.length - 1;
+        while (tail <= head) {
             if (digits[tail++] != digits[head--]) {
                 return false;
             }
         }
         return true;
     }
+
+    public static BigInteger reverse(BigInteger input) {
+        BigInteger out = BigInteger.ZERO;
+        while (input.compareTo(BigInteger.ZERO) != 0) {
+            out = out.multiply(BigInteger.TEN);
+            out = out.add(input.mod(BigInteger.TEN));
+            input = input.divide(BigInteger.TEN);
+        }
+        return out;
+    }
+
+    public static int length(BigInteger input, short base) {
+        return getBaseDigits(input, base).length;
+    }
+
+    private static short[] getBaseDigits(BigInteger input, Short base) {
+        int count = 1;
+        short[] digits = new short[1];
+        BigInteger maxSub = BigInteger.ONE;
+        int lastValue = -1;
+        boolean first = true;
+        while (input.compareTo(BigInteger.ZERO) != 0) {
+            while ((maxSub.compareTo(input) == -1)
+                    && maxSub.multiply(new BigInteger(String.valueOf(base))).compareTo(BigInteger.ZERO) == 1) {
+                maxSub = maxSub.multiply(new BigInteger(String.valueOf(base)));
+                count++;
+            }
+            if (maxSub.compareTo(input) == 1) {
+                maxSub = maxSub.divide(new BigInteger(String.valueOf(base)));
+                count--;
+            }
+            if (first) {
+                first = false;
+                digits = new short[count];
+                lastValue = count - 1;
+            }
+            while (maxSub.compareTo(input) == 0 || maxSub.compareTo(input) == -1) {
+                input = input.subtract(maxSub);
+                digits[lastValue - (count - 1)]++;
+            }
+        }
+        return digits;
+    }
+
+    public static String digitsToString(short[] _d) {
+        String out = "";
+        for (short s : _d) {
+            out = out + s + " ";
+        }
+        return out;
+    }
+
 }
